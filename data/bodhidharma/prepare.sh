@@ -27,10 +27,12 @@ fi
 # Fix the key signatures and filenames
 dir=01_fixed
 mkdir "$dir" && {
-  log "Found $(find -L "$src_dir" -type f | wc -l) files in $src_dir"
   find -L "$src_dir" | grep -Ei '\.mid$' | while read -r f; do
     fname="$(basename "$f" | sed -r 's/\.mid/.mid/i')"
-    log_progress "$fname"
+	fname=$(echo "$fname" | tr -d '\r')  # Remove carriage return characters
+	log_progress "$fname"
+	f=$(echo "$f" | tr -d '\r')  # Remove carriage return characters
+	log_progress "$f"
     python -m groove2groove.scripts.fix_midi_key_signatures "$f" "$dir/$fname"
   done || die
   log

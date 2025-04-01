@@ -1,0 +1,15 @@
+- create venv (I use Python 3.6)
+- install dependencies (from requirements.txt) manually (ignore the versions on the files, download latest versions)
+- run "pip install './code[gpu]'"
+- make sure wget installed ("chocolatey install wget" on powershellm run as admin)
+- run the following .sh files (in order):
+	- data/synth/download
+	- on terminal in venv, cd into data/synth, then:
+		- './prepare.sh train'
+		- './prepare.sh val'
+		- './prepare.sh test'
+	- also on terminal in venv (cd into data/bodhidarma):
+		- './prepare.sh'
+
+train:
+- python -m groove2groove.models.roll2seq_style_transfer --logdir C:\Users\Santi\Documents\GitHub\groove2groove\experiments\v01_drums_vel_perf train
