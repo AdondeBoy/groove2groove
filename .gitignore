@@ -1,4 +1,7 @@
 /experiments/eval/style_profiles/*.json
+/data/synth/*
+/data/bodhidharma/*
+/data/bodhidharma/experiments
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

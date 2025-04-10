@@ -1,0 +1,46 @@
+1. crear venv (uso Python 3.6)
+2. activarlo (ejecutar 'venv\Scripts\activate' desde terminal, 'source venv/Scripts/activate' en bash)
+3. instalar dependencias manualmente (copy y paste contenido de 'dependencies pip.txt' en terminal)
+4. ejecutar "pip install './code[gpu]'" en terminal en venv
+5. instalar wget en caso de no tenerlo ya ("chocolatey install wget" en powershell run as admin)
+6. ejecutar los siguientes scripts (en orden):
+	- data/synth/download.sh
+	- con terminal (recomiendo git bash) en venv, cd a data/synth, después
+		- './prepare.sh train'
+		- './prepare.sh val'
+		- './prepare.sh test'
+		(si estos .sh no funcionan, volver al paso 4, no hace falta volver a ejecutar download.sh)
+	- también con terminal en venv (cd a data/bodhidarma):
+		- './prepare2.sh'
+7. run vel_norm.ipynb (en carpeta '/data')
+
+instalar:
+- CUDA 9.0: https://developer.nvidia.com/cuda-90-download-archive
+	descargar el instalador y darle que sí a todo, aunque todo dé error
+- cuDNN 7.6: https://developer.nvidia.com/rdp/cudnn-archive
+	descargar la versión 7.8.0 para CUDA 9.0, copiar contenidos en directorio de CUDA 9.0 (en ProgramFiles/Nvidia algo...)
+revisar que las variables de entorno tengan el path correcto (usar barra de búsqueda de Windows)
+	en la variable PATH, CUDA 9.0 tiene que estar por encima de las otras versiones de CUDA
+'nvcc --version' en terminal en venv (desde la carpeta root del proyecto) para ver la versión, si no es la correcta (9.0), reiniciar PC
+
+
+Haciendo cd a '/code':
+train:
+- en 'data/synth/train/final', copiar (por si acaso, a lo mejor basta con mover) meta.json a subcarpeta /shuf (por la cara)
+- 'python -m groove2groove.models.roll2seq_style_transfer --logdir C:\Users\Santi\Documents\GitHub\groove2groove\experiments\v01_drums_vel_perf train'
+
+
+run:
+
+python -m groove2groove.models.roll2seq_style_transfer --logdir $LOGDIR run-midi \
+    --sample --softmax-temperature 0.6 \
+    content.mid style.mid output.mid
+
+
+Mi test:
+	- content.mid: piratas.mid
+	- style.mid: zelda.mid
+python -m groove2groove.models.roll2seq_style_transfer --logdir C:\Users\Santi\Documents\GitHub\groove2groove\experiments\v01_drums_vel_perf run-midi --sample --softmax-temperature 0.6 piratas.mid zelda.mid output.mid
+
+
+Mi $LOGDIR: C:\Users\Santi\Documents\GitHub\groove2groove\experiments\v01_drums_vel_perf

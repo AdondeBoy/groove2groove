@@ -1,0 +1,17 @@
+pip install cached-property
+pip install coloredlogs
+pip install confugue
+pip install jupyter
+pip install lmdb
+pip install note-seq
+pip install museflow[gpu]
+pip install mido
+pip install numpy
+pip install pandas
+pip install pretty-midi
+pip install PyYAML
+pip install scikit-learn
+pip install scipy
+pip install tensorboard
+pip install tensorflow-gpu
+pip install tqdm
