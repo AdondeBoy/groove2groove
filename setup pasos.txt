@@ -44,3 +44,14 @@ python -m groove2groove.models.roll2seq_style_transfer --logdir C:\Users\Santi\D
 
 
 Mi $LOGDIR: C:\Users\Santi\Documents\GitHub\groove2groove\experiments\v01_drums_vel_perf
+
+
+
+En code/groove2groove/models/roll2seq_style_transfer.py se hace el style encoder y el decoder.
+	- Se pasa el style input por una CNN (code/groove2groove/models/common.py)
+	- El output de esa CNN se pasa por una RNN (venv/Lib/site-packages/museflow/nn/rnn.py)
+
+En los imports se ve que la RNN viene de Museflow (la precuela de grv2grv), mientras que CNN es propio de grv2grv.
+
+Supongo que debería sustituir este rnn(cnn(input))
+por otra cosa (supongo que un output constante ya encoded para que sea siempre el mismo estilo)
