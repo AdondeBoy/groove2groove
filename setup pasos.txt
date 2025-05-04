@@ -1,3 +1,4 @@
+(Recomendado ejecutar todos los comandos desde git bash)
 1. crear venv (uso Python 3.6)
 2. activarlo (ejecutar 'venv\Scripts\activate' desde terminal, 'source venv/Scripts/activate' en bash)
 3. instalar dependencias manualmente (copy y paste contenido de 'dependencies pip.txt' en terminal)
