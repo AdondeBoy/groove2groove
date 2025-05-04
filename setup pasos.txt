@@ -4,8 +4,8 @@
 4. ejecutar "pip install './code[gpu]'" en terminal en venv
 5. instalar wget en caso de no tenerlo ya ("chocolatey install wget" en powershell run as admin)
 6. ejecutar los siguientes scripts (en orden):
-	- data/synth/download.sh
-	- con terminal (recomiendo git bash) en venv, cd a data/synth, después
+	- con terminal (recomiendo git bash) en venv, cd a data/synth, después:
+		- './download.sh'
 		- './prepare.sh train'
 		- './prepare.sh val'
 		- './prepare.sh test'
