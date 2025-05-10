@@ -92,13 +92,13 @@ trainer:
   validation_period: 800
 
 train_data:
-  source_db_path: ../data/synth/train/final/shuf/all_except_drums.db
-  target_db_path: ../data/synth/train/final/shuf/all.db
-  metadata_path: ../data/synth/train/final/shuf/meta.json.gz
+  source_db_path: ../data/Zelda/train/final/all_except_drums.db
+  target_db_path: ../data/Zelda/train/final/all.db
+  metadata_path: ../data/Zelda/train/final/meta.json.gz
 val_data:
-  source_db_path: ../data/synth/val/final/all_except_drums.db
-  target_db_path: ../data/synth/val/final/all.db
-  metadata_path: ../data/synth/val/final/meta.json.gz
+  source_db_path: ../data/Zelda/val/final/all_except_drums.db
+  target_db_path: ../data/Zelda/val/final/all.db
+  metadata_path: ../data/Zelda/val/final/meta.json.gz
 
 style_note_filters:
   Bass:
@@ -115,7 +115,7 @@ style_note_filters:
 data_prep:
   num_epochs: 1
   num_train_examples: 1559098  # 1/2 epoch
-  train_batch_size: 64
-  val_batch_size: 128
+  train_batch_size: 4
+  val_batch_size: 4
   shuffle_buffer_size: 2000
 max_target_length: 300

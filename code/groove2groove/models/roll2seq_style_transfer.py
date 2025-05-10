@@ -39,6 +39,8 @@ class Model:
         rnn = self._cfg['encoder_rnn'].configure(RNNLayer,
                                                  training=self._is_training,
                                                  name='encoder_rnn')
+
+
         encoder_states, _ = rnn(cnn(inputs))
 
         embeddings = self._cfg['embedding_layer'].configure(EmbeddingLayer,
@@ -56,6 +58,7 @@ class Model:
         _, style_final_state = style_rnn(style_cnn(embeddings.embed(style_inputs)))
         self.style_vector = (style_projection(style_final_state) if style_projection
                              else style_final_state)
+
         style_dropout = self._cfg['style_dropout'].maybe_configure(tf.layers.Dropout)
         if style_dropout:
             self.style_vector = style_dropout(self.style_vector, training=self._is_training)
@@ -178,6 +181,32 @@ class Experiment:
 
         _LOGGER.info('Starting training.')
         self.trainer.train()
+
+    def extract_vector(self, args):
+        self.trainer.load_variables(checkpoint_file=args.checkpoint)
+        # obtener el directorio de files de entrada
+        source_path = args.source_dir
+        # obtener el nombre de los archivos midi
+        source_path = [os.path.join(source_path, f) for f in os.listdir(source_path)]
+        # extraer vector en cada archivo midi
+        # y guardarlo en un archivo numpy
+        # crear el directorio de salida si no existe
+        os.makedirs(os.path.dirname(args.output_file), exist_ok=True)
+        vectores = []
+        for file in source_path:
+            pipeline = MidiPipeline(source_path=file, warp=False)
+            dataset = make_simple_dataset(
+                self._load_data(pipeline),
+                output_types=self.input_types,
+                output_shapes=self.input_shapes,
+                batch_size=args.batch_size or self._cfg['data_prep'].get('val_batch_size'))
+            style_vector = self.model.run(self.trainer.session, dataset, sample=False)
+            vectores.append(style_vector)
+            np.save(args.output_file, style_vector)
+            _LOGGER.info(f'Vector de estilo guardado en {args.output_file}')
+        # sacar el promedio de los vectores
+        vectores = np.array(vectores)
+        mean_vector = np.mean(vectores, axis=0)
 
     def run_midi(self, args):
         pipeline = MidiPipeline(source_path=args.source_file, style_path=args.style_file,
@@ -357,6 +386,14 @@ def main():
 
     subparser = subparsers.add_parser('train')
     subparser.set_defaults(func=Experiment.train, train_mode=True)
+
+    subparser = subparsers.add_parser('extract-vector')
+    subparser.set_defaults(func=Experiment.extract_vector)
+    subparser.add_argument('source_dir', metavar='INPUTFILE',
+                           help='Carpeta de entrada de los MIDIs de los cuales extraer un vector.')
+    subparser.add_argument('output_file', metavar='OUTPUTFILE', help='Archivo donde se guardará el vector de estilo.')
+    subparser.add_argument('--checkpoint', default=None, type=str, help='Checkpoint del modelo.')
+    subparser.add_argument('--batch-size', default=None, type=int, help='Tamaño del batch.')
 
     subparser = subparsers.add_parser('run-midi')
     subparser.set_defaults(func=Experiment.run_midi)
