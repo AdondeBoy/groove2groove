@@ -1,12 +1,12 @@
-(Recomendado ejecutar todos los comandos desde git bash)
+(Recomendado ejecutar todos los comandos desde git bash, donde el path va con / y no con \)
 1. crear venv (uso Python 3.6)
 2. activarlo (ejecutar 'venv\Scripts\activate' desde terminal, 'source venv/Scripts/activate' en bash)
 3. instalar dependencias manualmente (copy y paste contenido de 'dependencies pip.txt' en terminal)
 4. ejecutar "pip install './code[gpu]'" en terminal en venv
 5. instalar wget en caso de no tenerlo ya ("chocolatey install wget" en powershell run as admin)
 6. ejecutar los siguientes scripts (en orden):
-	- con terminal (recomiendo git bash) en venv, cd a data/synth, después:
-		- './download.sh'
+	- con terminal en venv, cd a data/synth, después:
+		- '/download.sh'
 		- './prepare.sh train'
 		- './prepare.sh val'
 		- './prepare.sh test'
@@ -24,11 +24,13 @@ revisar que las variables de entorno tengan el path correcto (usar barra de bús
 	en la variable PATH, CUDA 9.0 tiene que estar por encima de las otras versiones de CUDA
 'nvcc --version' en terminal en venv (desde la carpeta root del proyecto) para ver la versión, si no es la correcta (9.0), reiniciar PC
 
+Descargar el modelo (seguir readme de /experiments)
 
 Haciendo cd a '/code':
 train:
 - en 'data/synth/train/final', copiar (por si acaso, a lo mejor basta con mover) meta.json a subcarpeta /shuf (por la cara)
-- 'python -m groove2groove.models.roll2seq_style_transfer --logdir C:\Users\Santi\Documents\GitHub\groove2groove\experiments\v01_drums_vel_perf train'
+- cmd: 'python -m groove2groove.models.roll2seq_style_transfer --logdir C:\Users\Santi\Documents\GitHub\groove2groove\experiments\v01_drums_vel_perf train'
+- bash: 'python -m groove2groove.models.roll2seq_style_transfer --logdir C:/Users/Santi/Documents/GitHub/groove2groove/experiments/v01_drums_vel_perf train'
 
 
 run:
@@ -37,6 +39,11 @@ python -m groove2groove.models.roll2seq_style_transfer --logdir $LOGDIR run-midi
     --sample --softmax-temperature 0.6 \
     content.mid style.mid output.mid
 
+python -m groove2groove.models.roll2seq_style_transfer \
+--logdir C:/Users/Santi/Documents/GitHub/groove2groove/experiments/v01_drums_vel_perf \
+    run-midi --sample --softmax-temperature 0.6 \
+    piratas.mid zelda.mid output.mid
+
 
 Mi test:
 	- content.mid: piratas.mid
@@ -44,8 +51,9 @@ Mi test:
 python -m groove2groove.models.roll2seq_style_transfer --logdir C:\Users\Santi\Documents\GitHub\groove2groove\experiments\v01_drums_vel_perf run-midi --sample --softmax-temperature 0.6 piratas.mid zelda.mid output.mid
 
 
-Mi $LOGDIR: C:\Users\Santi\Documents\GitHub\groove2groove\experiments\v01_drums_vel_perf
-
+Mi $LOGDIR:
+	- win: C:\Users\Santi\Documents\GitHub\groove2groove\experiments\v01_drums_vel_perf
+	- bash: C:/Users/Santi/Documents/GitHub/groove2groove/experiments/v01_drums_vel_perf
 
 
 En code/groove2groove/models/roll2seq_style_transfer.py se hace el style encoder y el decoder.

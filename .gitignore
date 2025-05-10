@@ -2,6 +2,9 @@
 /data/synth/*
 /data/bodhidharma/*
 /data/bodhidharma/experiments
+/data/Zelda/*
+/experiments/v01_drums_vel_perf
+/experiments/v01_drums_vel
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
