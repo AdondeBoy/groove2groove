@@ -55,10 +55,6 @@ Mi $LOGDIR:
 	- win: C:\Users\Santi\Documents\GitHub\groove2groove\experiments\v01_drums_vel_perf
 	- bash: C:/Users/Santi/Documents/GitHub/groove2groove/experiments/v01_drums_vel_perf
 
-EXTRAER VECTORES:
-(BETA) python roll2seq_style_transfer.py extract-vector $INPUTDIR $OUTPUTFILE --checkpoint CHECKPOINT_PATH --batch-size BATCH_SIZE
-python roll2seq_style_transfer.py --logdir <ruta_del_logdir> extract-vector <INPUTDIR> <OUTPUT> --checkpoint <CHECKPOINT> --batch-size <BATCH_SIZE>
-python roll2seq_style_transfer.py --logdir ../experiments/v01_drums_vel_perf extract-vector ../data/Zelda/MIDI_Files Zelda
 
 En code/groove2groove/models/roll2seq_style_transfer.py se hace el style encoder y el decoder.
 	- Se pasa el style input por una CNN (code/groove2groove/models/common.py)
@@ -68,3 +64,12 @@ En los imports se ve que la RNN viene de Museflow (la precuela de grv2grv), mien
 
 Supongo que debería sustituir este rnn(cnn(input))
 por otra cosa (supongo que un output constante ya encoded para que sea siempre el mismo estilo)
+
+
+
+EXTRAER VECTORES:
+Tiene una variable de debug que hay que poner a False para que funcione como toque, si no, es una simulación de su funcionamiento.
+
+Llamada:
+python -m groove2groove.models.roll2seq_style_transfer --logdir <ruta_del_logdir> extract-vector <INPUTDIR> <OUTPUT> --checkpoint <CHECKPOINT> --batch-size <BATCH_SIZE>
+python -m groove2groove.models.roll2seq_style_transfer --logdir ../experiments/v01_drums_vel_perf extract-vector ../data/Zelda/MIDI_Files Zelda
