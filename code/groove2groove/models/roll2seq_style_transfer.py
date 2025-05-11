@@ -183,30 +183,45 @@ class Experiment:
         self.trainer.train()
 
     def extract_vector(self, args):
-        self.trainer.load_variables(checkpoint_file=args.checkpoint)
+        print("\n\n\n|-----------------------|\n\nEntra al método extract_vector\n\n|-----------------------|\n\n\n")
+        self.trainer.load_variables(checkpoint_name='latest', checkpoint_file=args.checkpoint)
         # obtener el directorio de files de entrada
         source_path = args.source_dir
         # obtener el nombre de los archivos midi
         source_path = [os.path.join(source_path, f) for f in os.listdir(source_path)]
+        # crear el directorio de salida si no existe
+        os.makedirs(os.path.dirname(args.output + " vectors"), exist_ok=True)
+        vectores = []
+        i = 0
+        var_debug = True
         # extraer vector en cada archivo midi
         # y guardarlo en un archivo numpy
-        # crear el directorio de salida si no existe
-        os.makedirs(os.path.dirname(args.output_file), exist_ok=True)
-        vectores = []
-        for file in source_path:
-            pipeline = MidiPipeline(source_path=file, warp=False)
-            dataset = make_simple_dataset(
-                self._load_data(pipeline),
-                output_types=self.input_types,
-                output_shapes=self.input_shapes,
-                batch_size=args.batch_size or self._cfg['data_prep'].get('val_batch_size'))
-            style_vector = self.model.run(self.trainer.session, dataset, sample=False)
-            vectores.append(style_vector)
-            np.save(args.output_file, style_vector)
-            _LOGGER.info(f'Vector de estilo guardado en {args.output_file}')
+        if not var_debug:
+            for file in source_path:
+                i += 1
+                pipeline = MidiPipeline(source_path=file, warp=False)
+                dataset = make_simple_dataset(
+                    self._load_data(pipeline),
+                    output_types=self.input_types,
+                    output_shapes=self.input_shapes,
+                    batch_size=args.batch_size or self._cfg['data_prep'].get('val_batch_size'))
+                style_vector = self.model.run(self.trainer.session, dataset, sample=False)
+                vectores.append(style_vector)
+                np.save(args.output + " " + str(i), style_vector)
+                _LOGGER.info(f'Vector de estilo guardado en {args.output_file}')
+        else:
+            # simular que se llenan los vectores
+            for file in source_path:
+                i += 1
+                vector = np.random.rand(1, 128)
+                vectores.append(vector)
+                np.save(args.output + " " + str(i), vector)
+                _LOGGER.info(f'Vector de estilo guardado en {args.output_file}')
         # sacar el promedio de los vectores
         vectores = np.array(vectores)
         mean_vector = np.mean(vectores, axis=0)
+        # guardar el vector promedio
+        np.save(args.output + " 0 global", mean_vector)
 
     def run_midi(self, args):
         pipeline = MidiPipeline(source_path=args.source_file, style_path=args.style_file,
@@ -389,9 +404,10 @@ def main():
 
     subparser = subparsers.add_parser('extract-vector')
     subparser.set_defaults(func=Experiment.extract_vector)
-    subparser.add_argument('source_dir', metavar='INPUTFILE',
+    subparser.add_argument('source_dir', metavar='INPUTDIR',
                            help='Carpeta de entrada de los MIDIs de los cuales extraer un vector.')
-    subparser.add_argument('output_file', metavar='OUTPUTFILE', help='Archivo donde se guardará el vector de estilo.')
+    subparser.add_argument('output', metavar='OUTPUT',
+                           help='Nombre del archivo donde se guardará el vector de estilo.')
     subparser.add_argument('--checkpoint', default=None, type=str, help='Checkpoint del modelo.')
     subparser.add_argument('--batch-size', default=None, type=int, help='Tamaño del batch.')
 
